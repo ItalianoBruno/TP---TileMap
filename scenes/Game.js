@@ -40,7 +40,7 @@ export default class Game extends Phaser.Scene {
     const spawnY = 15 * tileHeight + tileHeight / 2;
 
     //Player
-    this.player = this.physics.add.sprite(spawnX,spawnY, "dude");
+    this.player = this.physics.add.sprite(spawnX, spawnY, "dude");
     this.player.setScale(1.25);
     //Vars del pj
     this.tieneHacha = false;
@@ -52,11 +52,11 @@ export default class Game extends Phaser.Scene {
     const arbol2Layer = map.createLayer("Arboles2", tileset, 0, 0);
     // Capa de objetos
     const objectsLayer = map.getObjectLayer("Objetos");
-     //Objetos
+    //Objetos
     const arbolObj = objectsLayer.objects.find(obj => obj.name === "ArbolArDer");
     if (arbolObj) {
       const arbolSprite = this.physics.add.sprite(arbolObj.x, arbolObj.y, "arbol");
-      arbolSprite.setOrigin(0.5, 0.82);
+      arbolSprite.setOrigin(0.5, 0.80468);
       arbolSprite.body.immovable = true;
       arbolSprite.body.allowGravity = false;
       this.physics.add.collider(this.player, arbolSprite);
@@ -69,7 +69,7 @@ export default class Game extends Phaser.Scene {
       HachaSprite.body.immovable = true;
       HachaSprite.body.allowGravity = false;
       this.physics.add.overlap(this.player, HachaSprite,
-        (player, hacha) => {hacha.disableBody(true, true);this.tieneHacha = true;},
+        (player, hacha) => { hacha.disableBody(true, true); this.tieneHacha = true; },
         null, this);
     }
 
@@ -105,9 +105,9 @@ export default class Game extends Phaser.Scene {
       frameRate: 8,
       repeat: -1,
     });
-    
 
-    
+
+
     //coliciones del suelo
     pisoLayer.setCollisionByProperty({ esColision: true });
     this.physics.add.collider(this.player, pisoLayer);
@@ -136,14 +136,14 @@ export default class Game extends Phaser.Scene {
     if (this.cursors.left.isDown) {
       this.player.setVelocityX(-this.speed);
       this.player.anims.play("left", true);
-    } 
+    }
     if (this.cursors.right.isDown) {
       this.player.setVelocityX(this.speed);
       this.player.anims.play("right", true);
-    } 
+    }
     if (this.cursors.up.isDown) {
       this.player.setVelocityY(-this.speed);
-    } 
+    }
     if (this.cursors.down.isDown) {
       this.player.setVelocityY(this.speed);
     }
