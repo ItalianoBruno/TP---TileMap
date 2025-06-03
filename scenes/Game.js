@@ -59,7 +59,7 @@ export default class Game extends Phaser.Scene {
       arbolSprite.setOrigin(0.5, 0.80468);
       arbolSprite.body.immovable = true;
       arbolSprite.body.allowGravity = false;
-      this.physics.add.collider(this.player, arbolSprite);
+      this.physics.add.collider(this.player, arbolSprite, this.talarArbol, null, this)
     }
     const HachaObj = objectsLayer.objects.find(obj => obj.name === "Hacha");
     if (HachaObj) {
@@ -126,6 +126,7 @@ export default class Game extends Phaser.Scene {
     //Resumir Teclas
     this.cursors = this.input.keyboard.createCursorKeys();
     this.keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+    this.interact = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
     // vel pj
     this.speed = 300;
@@ -162,5 +163,14 @@ export default class Game extends Phaser.Scene {
       console.log("Phaser.Input.Keyboard.JustDown(this.keyR)");
       this.scene.restart();
     }
+  }
+
+  talarArbol() {
+    if (this.tieneHacha){
+      arbol.disableBody(true, true)
+      console.log("puedes talar")
+   } else {
+    console.log("no puedes talar")
+   }
   }
 }
