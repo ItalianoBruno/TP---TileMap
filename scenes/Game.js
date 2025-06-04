@@ -16,10 +16,6 @@ export default class Game extends Phaser.Scene {
     this.load.image("esquinas", "public/assets/esquinas.png");
     this.load.image("arbol", "public/assets/arbol.png");
     this.load.image("hacha", "public/assets/hacha.png");
-    this.load.spritesheet("pj", "public/assets/PjMaze.png", {
-      frameWidth: 64,
-      frameHeight: 64,
-    });
     this.load.spritesheet("dude", "./public/assets/dude.png", {
       frameWidth: 32,
       frameHeight: 48,
@@ -46,7 +42,6 @@ export default class Game extends Phaser.Scene {
     this.tieneHacha = false;
 
     // Cargar el mapa y las capas
-
     const pisoLayer = map.createLayer("Piso", [esquinas, tileset], 0, 0);
     const arbolLayer = map.createLayer("Arboles", tileset, 0, 0);
     const arbol2Layer = map.createLayer("Arboles2", tileset, 0, 0);
@@ -80,12 +75,6 @@ export default class Game extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
     //Animación del jugador
-    this.anims.create({
-      key: "muve",
-      frames: this.anims.generateFrameNumbers("pj", { start: 0, end: 4 }),
-      frameRate: 7,
-      repeat: -1,
-    });
     this.anims.create({
       key: "left",
       frames: this.anims.generateFrameNumbers("dude", { start: 0, end: 3 }),
@@ -123,6 +112,11 @@ export default class Game extends Phaser.Scene {
     arbolLayer.setDepth(2);
     arbol2Layer.setDepth(2);
 
+    // //Crear neblina
+    // this.fogRT = this.add.renderTexture(0, 0, map.widthInPixels, map.heightInPixels).setDepth(100);
+    // this.fogRT.fill(0x000000, 0.95); // 0.95 = opacidad, ajusta a gusto
+    // this.visionCircle = this.add.circle(0, 0, visionRadius, 0xffffff).setAlpha(1).setVisible(false);
+
     //Resumir Teclas
     this.cursors = this.input.keyboard.createCursorKeys();
     this.keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
@@ -133,6 +127,16 @@ export default class Game extends Phaser.Scene {
   }
 
   update() {
+    // // Limpia la niebla
+    // this.fogRT.clear();
+    // this.fogRT.fill(0x000000, 0.95);
+
+    // // Dibuja un círculo transparente donde está el jugador
+    // const visionRadius = 120; // Ajusta el radio de visión
+    // this.fogRT.erase(
+    //   this.add.circle(this.player.x, this.player.y, visionRadius, 0xffffff).setAlpha(1)
+    // );
+
     // update game objects
     if (this.cursors.left.isDown) {
       this.player.setVelocityX(-this.speed);
@@ -165,12 +169,12 @@ export default class Game extends Phaser.Scene {
     }
   }
 
-  talarArbol() {
-    if (this.tieneHacha){
-      arbol.disableBody(true, true)
-      console.log("puedes talar")
-   } else {
-    console.log("no puedes talar")
-   }
+  talarArbol(player, arbol) {
+    if (this.tieneHacha) {
+      console.log("puedes talar");
+      arbol.destroy();
+    } else {
+      console.log("no puedes talar")
+    }
   }
 }
