@@ -32,8 +32,8 @@ export default class Game extends Phaser.Scene {
     // Calcula la posición para el spawn del jugador
     const tileWidth = map.tileWidth;
     const tileHeight = map.tileHeight;
-    const spawnX = 55 * tileWidth + tileWidth / 2;
-    const spawnY = 15 * tileHeight + tileHeight / 2;
+    const spawnX = 59 * tileWidth + tileWidth / 2;
+    const spawnY = 59 * tileHeight + tileHeight / 2;
 
     //Player
     this.player = this.physics.add.sprite(spawnX, spawnY, "dude");
@@ -95,8 +95,6 @@ export default class Game extends Phaser.Scene {
       repeat: -1,
     });
 
-
-
     //coliciones del suelo
     pisoLayer.setCollisionByProperty({ esColision: true });
     this.physics.add.collider(this.player, pisoLayer);
@@ -112,30 +110,43 @@ export default class Game extends Phaser.Scene {
     arbolLayer.setDepth(2);
     arbol2Layer.setDepth(2);
 
-    // //Crear neblina
-    // this.fogRT = this.add.renderTexture(0, 0, map.widthInPixels, map.heightInPixels).setDepth(100);
-    // this.fogRT.fill(0x000000, 0.95); // 0.95 = opacidad, ajusta a gusto
-    // this.visionCircle = this.add.circle(0, 0, visionRadius, 0xffffff).setAlpha(1).setVisible(false);
-
     //Resumir Teclas
     this.cursors = this.input.keyboard.createCursorKeys();
     this.keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
     this.interact = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
     // vel pj
-    this.speed = 300;
+    this.speed = 180;
+
+    // --- EFECTO DE VISIÓN LIMITADA ---
+    this.visionRadius = 180; // Ajusta el radio de visión a gusto
+
+    // RenderTexture para la niebla
+    this.fogRT = this.add.renderTexture(0, 0, map.widthInPixels, map.heightInPixels).setDepth(1000).setScrollFactor(0);
+    // Graphics para el círculo de visión
+    this.visionMask = this.add.graphics();
+    this.visionMask.setVisible(true);
+
   }
 
   update() {
-    // // Limpia la niebla
-    // this.fogRT.clear();
-    // this.fogRT.fill(0x000000, 0.95);
 
-    // // Dibuja un círculo transparente donde está el jugador
-    // const visionRadius = 120; // Ajusta el radio de visión
-    // this.fogRT.erase(
-    //   this.add.circle(this.player.x, this.player.y, visionRadius, 0xffffff).setAlpha(1)
-    // );
+    // --- EFECTO DE VISIÓN LIMITADA ---
+    // Limpia la niebla - Dibuja la capa negra
+    this.fogRT.clear();
+    this.fogRT.fill(0x000000, 0.5);
+
+    // Dibuja el círculo de visión en la posición relativa a la cámara
+    this.visionMask.clear();
+    this.visionMask.fillStyle(0xffffff, 1);
+    // Calcula la posición del jugador en pantalla (por si la cámara se mueve)
+    const cam = this.cameras.main;
+    const px = this.player.x - cam.scrollX;
+    const py = this.player.y - cam.scrollY;
+    this.visionMask.fillCircle(px, py, this.visionRadius);
+
+    // Borra la niebla en la zona visible
+    this.fogRT.erase(this.visionMask);
 
     // update game objects
     if (this.cursors.left.isDown) {
