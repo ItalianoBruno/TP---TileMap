@@ -32,8 +32,8 @@ export default class Game extends Phaser.Scene {
     // Calcula la posición para el spawn del jugador
     const tileWidth = map.tileWidth;
     const tileHeight = map.tileHeight;
-    const spawnX = 55 * tileWidth + tileWidth / 2;
-    const spawnY = 15 * tileHeight + tileHeight / 2;
+    const spawnX = 59 * tileWidth + tileWidth / 2;
+    const spawnY = 59 * tileHeight + tileHeight / 2;
 
     //Player
     this.player = this.physics.add.sprite(spawnX, spawnY, "dude");
@@ -112,11 +112,6 @@ export default class Game extends Phaser.Scene {
     arbolLayer.setDepth(2);
     arbol2Layer.setDepth(2);
 
-    // //Crear neblina
-    // this.fogRT = this.add.renderTexture(0, 0, map.widthInPixels, map.heightInPixels).setDepth(100);
-    // this.fogRT.fill(0x000000, 0.95); // 0.95 = opacidad, ajusta a gusto
-    // this.visionCircle = this.add.circle(0, 0, visionRadius, 0xffffff).setAlpha(1).setVisible(false);
-
     //Resumir Teclas
     this.cursors = this.input.keyboard.createCursorKeys();
     this.keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
@@ -127,16 +122,6 @@ export default class Game extends Phaser.Scene {
   }
 
   update() {
-    // // Limpia la niebla
-    // this.fogRT.clear();
-    // this.fogRT.fill(0x000000, 0.95);
-
-    // // Dibuja un círculo transparente donde está el jugador
-    // const visionRadius = 120; // Ajusta el radio de visión
-    // this.fogRT.erase(
-    //   this.add.circle(this.player.x, this.player.y, visionRadius, 0xffffff).setAlpha(1)
-    // );
-
     // update game objects
     if (this.cursors.left.isDown) {
       this.player.setVelocityX(-this.speed);
