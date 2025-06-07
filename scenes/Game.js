@@ -165,8 +165,7 @@ export default class Game extends Phaser.Scene {
   }
 
   update() {
-
-    // update game objects
+    
     if (this.cursors.left.isDown) {
       this.player.setVelocityX(-this.speed);
       this.player.anims.play("left", true);
