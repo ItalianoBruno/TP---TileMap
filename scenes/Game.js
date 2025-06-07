@@ -7,7 +7,7 @@ export default class Game extends Phaser.Scene {
 
   init() {
     this.score = 0;
-    this.coleccionados = 5;
+    this.coleccionados = 0;
   }
 
   preload() {
@@ -71,25 +71,28 @@ export default class Game extends Phaser.Scene {
         (player, hacha) => { hacha.disableBody(true, true); this.tieneHacha = true; },
         null, this);
     }
+
+    //Salida
     const Salida = objectsLayer.objects.find(obj => obj.name === "salida");
     if (Salida) {
-  const salidaRect = this.add.graphics();
-  salidaRect.fillStyle(0x808080, 0.95);
-  salidaRect.fillRect(5, 0, 32, 76);
-  salidaRect.x = Salida.x;
-  salidaRect.y = Salida.y;
 
-  const salidaZone = this.add.zone(Salida.x + 32, Salida.y + 38, 32, 76);
-  this.physics.add.existing(salidaRect, true); // true = estático
+      const salidaRect = this.add.graphics();
+      salidaRect.fillStyle(0x808080, 0.95);
+      salidaRect.fillRect(5, 0, 32, 76);
+      salidaRect.x = Salida.x;
+      salidaRect.y = Salida.y;
 
-  this.physics.add.collider(this.player, salidaRect, () => {
-    if (this.coleccionados >= 5) {
-      console.log("Has salido del mapa con suficientes coleccionables");
-      this.scene.start("gameover", { score: this.score });
-    } else {
-      console.log("Necesitas al menos 5 coleccionables para salir");
-    }
-  }, null, this);
+      const salidaZone = this.add.zone(Salida.x + 16, Salida.y + 38, 32, 76);
+      this.physics.add.existing(salidaZone, true); // true = estático
+
+      this.physics.add.collider(this.player, salidaZone, () => {
+        if (this.coleccionados >= 5) {
+          console.log("Has salido del mapa con suficientes coleccionables");
+          this.scene.start("gameover", { score: this.score });
+        } else {
+          console.log("Necesitas al menos 5 coleccionables para salir");
+        }
+      }, null, this);
     }
 
     //Colectables
