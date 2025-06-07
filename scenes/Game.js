@@ -7,6 +7,7 @@ export default class Game extends Phaser.Scene {
 
   init() {
     this.score = 0;
+    this.coleccionados = 5;
   }
 
   preload() {
@@ -16,6 +17,7 @@ export default class Game extends Phaser.Scene {
     this.load.image("esquinas", "public/assets/esquinas.png");
     this.load.image("arbol", "public/assets/arbol.png");
     this.load.image("hacha", "public/assets/hacha.png");
+    this.load.image("Cartel", "public/assets/Cartel.png");
     this.load.spritesheet("dude", "./public/assets/dude.png", {
       frameWidth: 32,
       frameHeight: 48,
@@ -23,17 +25,19 @@ export default class Game extends Phaser.Scene {
   }
 
   create() {
+    console.log(this.coleccionados);
     // Crear el mapa
     const map = this.make.tilemap({ key: "map" });
     // Cargar los tilesets
     const tileset = map.addTilesetImage("TileSet32", "tileset");
     const esquinas = map.addTilesetImage("esquinas 2", "esquinas");
+    const Cartel = map.addTilesetImage("Cartel", "Cartel");
 
     // Calcula la posición para el spawn del jugador
     const tileWidth = map.tileWidth;
     const tileHeight = map.tileHeight;
-    const spawnX = 59 * tileWidth + tileWidth / 2;
-    const spawnY = 59 * tileHeight + tileHeight / 2;
+    const spawnX = 5 * tileWidth + tileWidth / 2;
+    const spawnY = 115 * tileHeight + tileHeight / 2;
 
     //Player
     this.player = this.physics.add.sprite(spawnX, spawnY, "dude");
@@ -43,7 +47,7 @@ export default class Game extends Phaser.Scene {
 
     // Cargar el mapa y las capas
     const pisoLayer = map.createLayer("Piso", [esquinas, tileset], 0, 0);
-    const arbolLayer = map.createLayer("Arboles", tileset, 0, 0);
+    const arbolLayer = map.createLayer("Arboles", [tileset, Cartel], 0, 0);
     const arbol2Layer = map.createLayer("Arboles2", tileset, 0, 0);
     // Capa de objetos
     const objectsLayer = map.getObjectLayer("Objetos");
@@ -59,7 +63,7 @@ export default class Game extends Phaser.Scene {
     const HachaObj = objectsLayer.objects.find(obj => obj.name === "Hacha");
     if (HachaObj) {
       const HachaSprite = this.physics.add.sprite(HachaObj.x, HachaObj.y, "hacha");
-      HachaSprite.setOrigin(0, 0.5);
+      HachaSprite.setOrigin(0, 0, 5);
       HachaSprite.setScale(0.12);
       HachaSprite.body.immovable = true;
       HachaSprite.body.allowGravity = false;
@@ -67,6 +71,44 @@ export default class Game extends Phaser.Scene {
         (player, hacha) => { hacha.disableBody(true, true); this.tieneHacha = true; },
         null, this);
     }
+    const Salida = objectsLayer.objects.find(obj => obj.name === "salida");
+    if (Salida) {
+  const salidaRect = this.add.graphics();
+  salidaRect.fillStyle(0x808080, 0.95);
+  salidaRect.fillRect(5, 0, 32, 76);
+  salidaRect.x = Salida.x;
+  salidaRect.y = Salida.y;
+
+  const salidaZone = this.add.zone(Salida.x + 32, Salida.y + 38, 32, 76);
+  this.physics.add.existing(salidaRect, true); // true = estático
+
+  this.physics.add.collider(this.player, salidaRect, () => {
+    if (this.coleccionados >= 5) {
+      console.log("Has salido del mapa con suficientes coleccionables");
+      this.scene.start("gameover", { score: this.score });
+    } else {
+      console.log("Necesitas al menos 5 coleccionables para salir");
+    }
+  }, null, this);
+    }
+
+    //Colectables
+    this.stars = this.physics.add.group();
+    objectsLayer.objects
+      .filter(obj => obj.name === "colect")
+      .forEach(obj => {
+        const star = this.stars.create(obj.x, obj.y, "star").setOrigin(1.1, 0.25).setScale(1.5);
+        star.body.allowGravity = false;
+      });
+
+    // Overlap para recolectar estrellas
+    this.physics.add.overlap(this.player, this.stars, (player, star) => {
+      star.disableBody(true, true);
+      this.score += 100;
+      this.coleccionados += 1;
+      console.log("Coleccionados: ", this.coleccionados);
+      console.log("Puntaje:", this.score);
+    }, null, this);
 
     //Camara
     this.cameras.main.startFollow(this.player);
@@ -117,36 +159,9 @@ export default class Game extends Phaser.Scene {
 
     // vel pj
     this.speed = 180;
-
-    // --- EFECTO DE VISIÓN LIMITADA ---
-    this.visionRadius = 180; // Ajusta el radio de visión a gusto
-
-    // RenderTexture para la niebla
-    this.fogRT = this.add.renderTexture(0, 0, map.widthInPixels, map.heightInPixels).setDepth(1000).setScrollFactor(0);
-    // Graphics para el círculo de visión
-    this.visionMask = this.add.graphics();
-    this.visionMask.setVisible(true);
-
   }
 
   update() {
-
-    // --- EFECTO DE VISIÓN LIMITADA ---
-    // Limpia la niebla - Dibuja la capa negra
-    this.fogRT.clear();
-    this.fogRT.fill(0x000000, 0.5);
-
-    // Dibuja el círculo de visión en la posición relativa a la cámara
-    this.visionMask.clear();
-    this.visionMask.fillStyle(0xffffff, 1);
-    // Calcula la posición del jugador en pantalla (por si la cámara se mueve)
-    const cam = this.cameras.main;
-    const px = this.player.x - cam.scrollX;
-    const py = this.player.y - cam.scrollY;
-    this.visionMask.fillCircle(px, py, this.visionRadius);
-
-    // Borra la niebla en la zona visible
-    this.fogRT.erase(this.visionMask);
 
     // update game objects
     if (this.cursors.left.isDown) {
