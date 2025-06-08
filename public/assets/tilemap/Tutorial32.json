@@ -62,8 +62,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":109.333333333333,
-                 "y":109.333333333333
+                 "x":109.333,
+                 "y":109.333
                 }, 
                 {
                  "ellipse":true,
@@ -74,8 +74,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":110.666666666667,
-                 "y":1006.66666666667
+                 "x":110.667,
+                 "y":1006.67
                 }, 
                 {
                  "height":0,
@@ -86,8 +86,44 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":959.666666666667,
+                 "x":959.667,
                  "y":213
+                }, 
+                {
+                 "ellipse":true,
+                 "height":0,
+                 "id":4,
+                 "name":"Salida",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1071.5,
+                 "y":48.6666666666667
+                }, 
+                {
+                 "ellipse":true,
+                 "height":0,
+                 "id":5,
+                 "name":"Cartel1",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":191,
+                 "y":1039
+                }, 
+                {
+                 "ellipse":true,
+                 "height":0,
+                 "id":6,
+                 "name":"Cartel2",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":207,
+                 "y":86
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -96,7 +132,7 @@
          "y":0
         }],
  "nextlayerid":3,
- "nextobjectid":4,
+ "nextobjectid":7,
  "orientation":"orthogonal",
  "renderorder":"left-up",
  "tiledversion":"1.11.2",
