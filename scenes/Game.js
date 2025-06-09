@@ -148,7 +148,7 @@ export default class Game extends Phaser.Scene {
     this.interact = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
     // vel pj
-    this.speed = 380;
+    this.speed = 180;
   }
 
   update() {

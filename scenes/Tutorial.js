@@ -194,7 +194,7 @@ export default class Tutorial extends Phaser.Scene {
     }, null, this);
     
     // vel pj
-    this.speed = 380;
+    this.speed = 180;
   }
 
   update() {
